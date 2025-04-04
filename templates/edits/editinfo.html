@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Edit Details
+{% endblock title %}
+{% block content %}
+<br><br><br><br>
+<h1 class="text-center">Edit {{ staller.name }}</h1>
+
+<div class="container">
+    <form method="post" class="text-center" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <!-- Hidden Fields to Store Latitude & Longitude -->
+        <input type="hidden" id="latitude" name="latitude" value="{{ staller.latitude }}">
+        <input type="hidden" id="longitude" name="longitude" value="{{ staller.longitude }}">
+
+        <!-- Debugging: Show Current Coordinates -->
+        <p><strong>Current Latitude:</strong> <span id="lat_display">{{ staller.latitude }}</span></p>
+        <p><strong>Current Longitude:</strong> <span id="lng_display">{{ staller.longitude }}</span></p>
+
+        <!-- Google Map -->
+        <div id="map" style="height: 400px; width: 100%;"></div>
+
+        <button type="submit" class="btn btn-success mt-3">Save</button>
+    </form>
+</div>
+
+<button onclick="goBack()" class="btn btn-primary">Go Back</button>
+
+<!-- JavaScript for Google Maps -->
+
+
+<!-- Google Maps API (Replace YOUR_API_KEY with a valid key) -->
+<script   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD25Kyjo8ZUHnfyIe5DR7LayV1PNsx2z-4&callback=initMap&libraries=places"
+async defer></script>
+
+{% endblock content %}

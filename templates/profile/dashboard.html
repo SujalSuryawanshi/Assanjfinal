@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% block content %}
+<style>
+
+    
+
+    .profile-header2 {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .profile-icon {
+        width: 56px;
+        height: 56px;
+        background: blue;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+    
+    .profile-name {
+        font-size: 20px;
+        font-weight: bold;
+    }
+    
+    .profile-username {
+        color: gray;
+        font-size: 14px;
+    }
+    
+    .premium-title {
+        margin-top: 15px;
+        font-weight: bold;
+        color: black;
+    }
+    
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .info-box {
+        padding: 15px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    
+    .blue {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    
+    .green {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .yellow {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .ranking-container {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .ranking-box {
+        flex: 1;
+        padding: 10px;
+        background: #ffe6e6;
+        border-radius: 5px;
+    }
+    
+    .ranking-list {
+        max-height: 120px;
+        overflow-y: auto;
+    }
+    
+    .rank-item {
+        color: #ffcc00;
+        font-weight: bold;
+    }
+    
+    .progress-container {
+        flex: 2;
+    }
+    
+    .progress-bar {
+        background: #ccc;
+        height: 6px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 5px;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: blue;
+    }
+    
+    .charts-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .chart-box {
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+</style>
+<br><br><br><br><br>
+    <div class="profile-header2">
+        <div class="profile-icon">
+            {{ profile_user.username|slice:":1" }}
+        </div>
+        <div>
+            <h2 class="profile-name">{{ profile_user.first_name }} {{ profile_user.last_name }}</h2>
+            <p class="profile-username">@{{ profile_user.username }}</p>
+        </div>
+    </div>
+    <br>
+    <div class="premium-title">
+        <h7 class="menu-text">{{ offer.message }}</h7>
+        <button onclick="goBack()" class="btn btn-success">Go Back</button>
+    </div>
+    
+    <!-- Subscription & Friends -->
+    <div class="grid-container">
+        <div class="info-box blue">
+            <p class="info-label">Subscription</p>
+            <p class="info-value">{{ profile_user.subscription_status }}</p>
+        </div>
+        <div class="info-box green">
+            <p class="info-label">Expiry</p>
+            <p class="info-value">{{ profile_user.subscription_expiry }}</p>
+        </div>
+        <div class="info-box yellow">
+            <p class="info-label">Total Friends</p>
+            <p class="info-value">{{ profile_user.friends.count }}</p>
+        </div>
+    </div>
+    
+    <!-- Ranking Section & Progress Bar -->
+    <div class="ranking-container">
+        <div class="ranking-box">
+            <h3>Ranking</h3>
+            <div class="ranking-list">
+                {% for rank in rank %}
+                <p class="rank-item">#{{ forloop.counter }} - {{rank.username}} ({{rank.points}} pts)</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <h3>Points: {{ profile_user.points }}</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ profile_user.points }}%;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="charts-container">
+        <div class="chart-box">
+            <canvas id="rankingLineChart"></canvas>
+        </div>
+        <div class="chart-box">
+            <canvas id="pointsChart"></canvas>
+        </div>
+        <div class="chart-box">
+            <canvas id="friendsPieChart"></canvas>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("Initializing Charts...");
+        
+        let pointsData = {{ points_history|safe }};
+        let datesLabels = {{ dates_labels|safe }};
+        let friendNames = {{ friend_names|safe }};
+        let friendPoints = {{ friend_points|safe }};
+        
+        console.log("Points Data:", pointsData);
+        console.log("Friend Names:", friendNames);
+        console.log("Friend Points:", friendPoints);
+        
+        // Line Chart - Points History
+        var ctxPoints = document.getElementById("pointsChart").getContext("2d");
+        new Chart(ctxPoints, {
+            type: "line",
+            data: {
+                labels: datesLabels,
+                datasets: [{
+                    label: "Points History",
+                    data: pointsData,
+                    borderColor: "#42A5F5",
+                    backgroundColor: "rgba(66, 165, 245, 0.2)",
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        
+        // Pie Chart - Friends Statistics
+        var ctxFriend = document.getElementById("friendsPieChart").getContext("2d");
+        new Chart(ctxFriend, {
+            type: "pie",
+            data: {
+                labels: ["Friends", "Sent", "Received", "Pending"],
+                datasets: [{
+                    data: [
+                    {{ total_friends }},
+                    {{ friend_requests_sent }},
+                    {{ friend_requests_received }},
+                    {{ pending_requests }}
+                    ],
+                    backgroundColor: ["#4CAF50", "#FFA726", "#42A5F5", "#FF6384"]
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        
+        // Line Chart - Ranking
+        var ctxRank = document.getElementById("rankingLineChart").getContext("2d");
+        new Chart(ctxRank, {
+            type: "line",
+            data: {
+                labels: friendNames,
+                datasets: [{
+                    label: "Friend Points",
+                    data: friendPoints,
+                    borderColor: "#4CAF50",
+                    backgroundColor: "rgba(76, 175, 80, 0.2)",
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        
+        console.log("Charts Loaded Successfully!");
+    });
+</script>
+{% endblock content %}

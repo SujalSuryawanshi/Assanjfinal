@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load star_rating %}
+{% load embed_video_tags %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% block search %}
+<div class="search-container">
+    <form role="search" method=GET action="{% url 'search' %}">
+        {% csrf_token %}
+        <input class="search-box" type="text" id="search-form" placeholder="Search for anything!" value="" name="query">
+        {% comment %} <button type="submit" class="search-submit"></button> {% endcomment %}
+    </form>
+</div>
+{% endblock search %}
+{% block title %}
+{{ stalls }}
+
+{% block content %}
+<br>
+<br>
+<br>
+<div class='description'>
+{% comment %} <form method="get" action="" class="form-inline my-2 my-lg-0">
+  <div class="form-group">
+      <select name="sort_by" id="sort_by" onchange="this.form.submit()" class="form-control">
+          <option value="">Select</option>
+          <option value="ratings_high_to_low" {% if sort_by == 'ratings_high_to_low' %}selected{% endif %}>Ratings High to Low</option>
+          <option value="ratings_low_to_high" {% if sort_by == 'ratings_low_to_high' %}selected{% endif %}>Ratings Low to High</option>
+          <option value="followers_high_to_low" {% if sort_by == 'followers_high_to_low' %}selected{% endif %}>Followers High to Low</option>
+          <option value="followers_low_to_high" {% if sort_by == 'followers_low_to_high' %}selected{% endif %}>Followers Low to High</option>
+      </select>
+  </div>
+</form>
+<br> {% endcomment %}
+<div class="dropdown">
+  <button
+    class="btn dropdown-toggle"
+    type="button"
+    id="dropdownMenuButton"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Categories
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    {% for cat in category %}
+      <li><a class="dropdown-item" href="{% url "category" cat.cat_name %}">{{cat.cat_name}}</a></li>
+    {% endfor %}
+  </ul>
+  <button onclick="goBack()" class="btn-back">Go Back</button>
+</div>
+</div>
+<br>
+<br>
+<div class="row row-cols-1 row-cols-md-3">
+  {% for i in stalls_with_follow_count %}
+  <div class="slide slide2">
+    <div class="card mb-4">
+        {% video i.stall.video '100% x 80%' %}    
+        <h5 class="card-title">{{i.stall.name}}</h5>
+        <h6 class="home-card-text">{{i.stall.address}}</h6>
+        <h6 class="home-card-text">{{i.stall.timings}}</h6>
+        <h6 class="home-card-text">{{i.stall.egit}}</h6>
+        <h6 class="home-card-text">{{ i.stall.rating|star_rating }} ({{ i.stall.rating }})</h6>
+        <h6 class="home-card-text">Followers: {{i.follow_count}}</h6>
+        <a href="{% url 'detail' i.stall.name %}" class="btn btn-primary look-button" data-name="{{i.stall.name}}">Look</a>  
+    </div>
+  </div>
+  <br>
+  <br>
+  {% endfor %} 
+</div>
+</div>
+{% endblock content %}

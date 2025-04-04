@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% block content %}
+<br>
+<br>
+<div class="container mt-5">
+    <h2>Your Cart</h2>
+
+    {% if cart %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                {% for cart_item in items %}
+                    <tr id="cart-item-{{ cart_item.id }}">
+                        <td>{{ cart_item.menu_item.name }}</td>
+                        <td>{{ cart_item.menu_item.normal_price }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="updateQuantity({{ cart_item.id }}, -1)">-</button>
+                            <span id="quantity-{{ cart_item.id }}">{{ cart_item.quantity }}</span>
+                            <button class="btn btn-sm btn-warning" onclick="updateQuantity({{ cart_item.id }}, 1)">+</button>
+                        </td>
+                        <td id="total-{{ cart_item.id }}">{{ cart_item.total_price }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="removeFromCart({{ cart_item.id }})">Remove</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                {% if total_price_true %}
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td colspan="2"><strong id="cart-total">{{ total_price }}</strong></td>
+                {% endif %}
+                </tr>
+            </tbody>
+        </table>
+
+        {% if total_price_true %}
+        <img id="upi-qr" src="" alt="Scan to Pay" style="display:none;">
+        <br>
+        <br>
+        <button class="btn btn-success" id="generate-qr-btn" onclick="generateQR('{{ total_price }}','{{ cart.related.owner.upi_id }}')">
+            Generate UPI QR
+        </button>
+
+        <button id="open-upi" class="btn btn-primary" onclick="openUPI()" style="display: none;">
+            Open UPI
+        </button>
+        
+        <p id="payment-status" style="display: none; color: green; font-weight: bold;"></p>
+
+        {% endif %}
+    {% else %}
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+        <p>Your cart is empty.</p>
+    {% endif %}
+</div>
+
+
+{% endblock %}

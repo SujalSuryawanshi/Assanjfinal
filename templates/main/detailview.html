@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% block search %}
+<div class="search-container">
+    <form role="search" method=GET action="{% url 'search' %}">
+        {% csrf_token %}
+        <input class="search-box" type="text" id="search-form" placeholder="Search for anything!" value="" name="query">
+        {% comment %} <button type="submit" class="search-submit"></button> {% endcomment %}
+    </form>
+</div>
+{% endblock search %}
+{% load embed_video_tags %}
+{% load custom_filters %}
+{% load star_rating %}
+{% load crispy_forms_tags %}
+{% load has_group %}
+{% load socialaccount %}
+
+{% block title %}{{ stall.name }}{% endblock title %}
+
+{% block content %}
+<br><br><br><br><br>
+<div class="description">
+  <a href="{% url 'offers' name=stall.name %}">
+    <button class="btn btn-warning">
+      Offers!
+    </button>
+  </a>
+  <button onclick="goBack()" class="btn btn-info">Go Back</button>
+
+  {% if user.username|lower == stall.owner.username|lower %}
+    <a href="{% url 'new_offer' staller_name=stall.name %}" class="btnry-link">
+      <button class="btnry">Add New Offer</button>
+    </a>
+  {% endif %}
+
+  <br><br>
+  
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div class="card mb-3">
+    {% video stall.video '100% x 200%' %}
+    
+    <div class="card-body p-4 text-center">
+      <h1 class="anton-regular text-primary mb-3">{{ stall.name }}</h1>
+      
+      <p class="text-muted mb-2">
+       <strong>📍 </strong> {{ stall.address }}
+      </p>
+    
+      <p class="text-muted mb-2">
+       <strong>🕒 </strong> {{ stall.timings }}
+      </p>
+    
+      <p class="text-muted mb-2">
+       <strong>👥 </strong> {{ follow_count }}
+      </p>
+    
+      <p class="text-warning mb-3">
+         <strong>Ratings: </strong>{{ stall.rating|star_rating }} ({{ staller_rating_count }} ratings)
+      </p>
+    
+      {% if user.is_authenticated %}
+        {% if stall.rush %}
+          <div class="alert alert-danger text-center" role="alert">
+             Not accepting orders
+          </div>
+        {% else %}
+          <h5 class="fw-bold mt-3"> Click to call:
+            <a href="tel:{{ stall.contact }}" class="btn btn-outline-dark fw-bold mb-3">
+              <i class="fas fa-phone-alt"></i> {{ stall.contact }}
+            </a>
+          </h5>
+        {% endif %}
+    
+        {% if form %}
+          <form method="post" action="{% url 'detail' name=stall.name %}" class="mb-3">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center">
+              <div style="max-width: 400px; width: 100%;">
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-info fw-bold w-100 mt-2">
+                   Submit Rating
+                </button>
+              </div>
+            </div>
+          </form>
+        {% else %}
+          <p class="text-muted">You need to be logged in to rate this staller.</p>
+        {% endif %}
+    
+        {% if is_following %}
+          
+          <form method="post" action="{% url 'unfollow_staller' stall.name %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger fw-bold">
+               Unfollow
+            </button>
+          </form>
+        {% else %}
+          <form method="post" action="{% url 'follow_staller' stall.name %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">
+              + Follow
+            </button>
+          </form>
+        {% endif %}
+      {% else %}
+        <a class="btn btn-primary fw-bold w-100" href="{% url 'login' %}?next={{ request.path }}">
+          <i class="fas fa-sign-in-alt"></i> Login to follow
+        </a>
+        <p class="text-muted text-center mt-2">Login to get contact details of this Staller!</p>
+      {% endif %}
+    
+      {% if user.is_authenticated and user.username|lower == stall.owner.username|lower %}
+        <a href="{% url 'edit_info' stall.pk %}" class="btn btn-warning fw-bold w-100 mt-3">
+          ✎ Edit Details
+        </a>
+      {% endif %}
+    </div>
+  </div>
+  <p><strong>Latitude:</strong> <span id="lat">{{ stall.latitude|default:0 }}</span></p>
+<p><strong>Longitude:</strong> <span id="lng">{{ stall.longitude|default:0 }}</span></p>
+<a id="openMapsBtn" href="#" target="_blank" class="btn btn-primary">
+  Open in Google Maps
+</a>
+  <div id="map" style="height: 400px; width: 100%;"></div>
+  <input type="hidden" id="stall-id" value="{{ stall.id }}">
+
+  {% if request.user == stall.owner %}
+  <br>
+  <br>
+  <br>
+      <button class='btn btn-success' onclick="updateLocation()">Update Location</button>
+  {% endif %}
+  <h1 class="anton-regular">Items</h1>
+
+  {% if user.is_authenticated and user.username|lower == stall.owner.username|lower %}
+    <h1 class="item-title">
+      <a href="{% url 'add_menu_item' stall.id %}">Add Item</a>
+    </h1>
+  {% endif %}
+
+  {% for category, items in menu_items_by_category.items %}
+    <div class="category">
+      <h2 class="anton-regular">{{ category.foo_name }}</h2>
+
+      {% for item in items %}
+        <div class="carder">
+          <div class="image">
+            {% if item.menu_photo %}
+              <img src="{{ item.menu_photo.url }}" loading="lazy" class="menuimage" alt="{{ item.name }}">
+            {% else %}
+              <p>No image available</p>
+            {% endif %}
+          </div>
+          <div class="info">
+            <h5 class="anton-regular">{{ item.name }}</h5>
+            <p class="home-card-text"><strong>Price: {{ item.normal_price }}</strong></p>
+            <p class="home-card-text">
+              {{ item.rating|star_rating }} <br>
+              <small>({{ menu_rating_counts|get_item:item.id }} ratings)</small>
+            </p>
+            <p class="home-card-text"><small>{{ item.description }}</small></p>
+
+            {% if user.is_authenticated %}
+              <button id="cart-btn-{{ item.id }}" class="btn btn-success" onclick="toggleCart({{ item.id }})">
+                {% if item.id in cart_items %}
+                  Remove from Cart
+                {% else %}
+                  Add to Cart
+                {% endif %}
+              </button>
+            {% else %}
+              <br><br>
+              <a class="btn btn-primary" href="{% url 'login' %}">Add to cart</a>
+            {% endif %}
+
+            {% if user.username|lower == stall.owner.username|lower %}
+              <br>
+              <a href="{% url 'delete_menu_item' item.id %}" class="btn btn-danger">Delete</a>
+              <a href="{% url 'edit_menu_item' item.name %}" class="btn btn-primary">Edit</a>
+            {% endif %}
+          </div>
+        </div>
+        <br><br>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% if user.is_authenticated %}
+<div class="sticky-footer d-flex justify-content-center align-items-center p-3 shadow-lg bg-light">
+  <a class="btn btn-primary btn-lg fw-bold d-flex align-items-center justify-content-center gap-2 px-5 py-3" 
+  href="{% url 'view_cart' stall.id %}">
+  <i class="fas fa-shopping-cart"></i> View Cart 
+</a>
+</div>
+{% else %}
+<div class="sticky-footer d-flex justify-content-center align-items-center p-3 shadow-lg bg-light">
+  <a class="btn btn-primary btn-lg fw-bold d-flex align-items-center justify-content-center gap-2 px-5 py-3" 
+  href="{% url 'login' %}">
+  <i class="fas fa-shopping-cart"></i> View Cart
+</a>
+</div>
+
+
+{% endif %}
+
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD25Kyjo8ZUHnfyIe5DR7LayV1PNsx2z-4&callback=initMap&libraries=places"
+  async defer>
+</script>
+
+{% endblock content %}

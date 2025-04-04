@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% block content %}
+<br>
+<br>
+<br>
+<div class="container mt-5">
+    <h2>My Orders</h2>
+
+    {% if orders %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Spot </th>
+                    <th>Order #</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+            
+                    <tr id="order-{{ order.id }}">
+                    <td> <a href={% url "detail" order.stall_owner %}> {{ order.stall_owner }}</td>
+                    <td><a href={% url "order_details" order.order_number %}>{{ order.order_number }}</td>
+                    {% comment %} <td>{{ order.order_number }}</td> {% endcomment %}
+                        
+                        <td>
+               
+                            {% if order.status == 'in_process' %}
+                            ⏰In Process
+                            
+                            {% elif order.status == 'done' %}
+                            ✅Completed
+                            {% endif %}
+                        </td>                    
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No orders placed yet.</p>
+    {% endif %}
+    <br>
+    <br>
+    <br>
+    <br>
+
+</div>
+
+{% endblock %}

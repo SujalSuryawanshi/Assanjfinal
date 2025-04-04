@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block body-class %} all {% endblock body-class %}
+{% block search %}
+<div class="search-container">
+    <form role="search" method=GET action="{% url 'search' %}">
+        {% csrf_token %}
+        <input class="search-box" type="text" id="search-form" placeholder="Search for anything!" value="" name="query">
+        {% comment %} <button type="submit" class="search-submit"></button> {% endcomment %}
+    </form>
+</div>
+{% endblock search %}
+
+{% block content %} 
+{% load custom_filters %}
+{% load star_rating %}
+{% load crispy_forms_tags %}
+{% load has_group %}
+{% load socialaccount %}
+{% load embed_video_tags %}
+{% load has_group %}
+<br><br><br>
+<div class="container py-5">
+    <h1 class="text-center anton-regular text-dark mb-4">Results for "{{ query }}"</h1>
+    
+    {% if stallers %}
+        <div class="row g-4">
+            {% for stalls in stalls_with_follow_count %}
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                        <div class="video-container">
+                            {% video stalls.stall.video '100% x 80%' %}    
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ stalls.stall.name }}</h5>
+                            <p class="text-muted">📍 {{ stalls.stall.address }}</p>
+                            <p class="text-muted">🕒 {{ stalls.stall.timings }}</p>
+                            <p class="text-muted">
+                                {% if stalls.stall.egit|lower == "veg" %}
+                                    🟢 {{ stalls.stall.egit }}
+                                {% elif stalls.stall.egit|lower == "non-veg" %}
+                                    🔴 {{ stalls.stall.egit }}
+                                {% elif stalls.stall.egit|lower == "both" %}
+                                    🟢🔴 {{ stalls.stall.egit }}
+                                {% else %}
+                                    {{ stalls.stall.egit }}
+                                {% endif %}
+                            </p>                                                      
+                            <p class="text-muted">⭐ {{ stalls.stall.rating|star_rating }} ({{ stalls.stall.rating }})</p>
+                            <p class="text-muted">👥 {{ stalls.follow_count }}</p>
+                            <a href="{% url 'detail' stalls.stall.name %}" class="btn btn-primary w-100">Step in!</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if menuitems %}
+        <div class="row g-4 mt-4">
+            {% for item in menuitems %}
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                        <div class="image-container">
+                            {% if item.menu_photo %}
+                                <img src="{{ item.menu_photo.url }}" alt="{{ item.name }}" class="card-img-top">
+                            {% else %}
+                                <p class="text-center text-muted py-3">No image available</p>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="text-muted">💰 Price: {{ item.normal_price }}</p>
+                            <p class="text-muted">⭐ {{ item.rating|star_rating }} ({{ menu_rating_counts|get_item:item.id }} ratings)</p>
+                            <p class="text-muted">📝 {{ item.description }}</p>
+                            <a href="{% url 'detail' item.owner %}" class="btn btn-primary w-100">Find Shop</a>
+                            {% if user.username|lower == stall.owner.username|lower %}
+                                <div class="d-flex justify-content-between mt-2">
+                                    <a href="{% url 'delete_menu_item' item.id %}" class="btn btn-danger w-50 me-1">Delete</a>
+                                    <a href="{% url 'edit_menu_item' item.id %}" class="btn btn-secondary w-50">Edit</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h2 class="text-center mt-5 text-muted">That's all we have for now!</h2>
+    {% endif %}
+</div>
+{% endblock content %}

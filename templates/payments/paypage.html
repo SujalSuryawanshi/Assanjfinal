@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% if object.payr %}
+<h1 class='text-center'>
+        <img src="{{ object.payr.url }}" alt="{{object.name}}" style="max-width: 300px; max-height: 300px;">
+</h1>
+{% else %}
+<h1 class=text-center>
+    No Payment for this shop
+</h1>
+{% endif %}
+
+<button onclick="goBack()" class="btn-back">Go Back</button>
+
+{% endblock content %}

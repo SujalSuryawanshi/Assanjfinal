@@ -1,0 +1,347 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find products that are not listed anywhere, from mud pots to fancy T-shirts. Hunt the best!!{% block description %}{% endblock description %}">
+    <meta name="robots" content="assanj,cheap clothes, best clothes, best stalls in nagpur, best stalls near me, best stalls in my city, best street shops, best street food, hand made products, cheap products {% block keywords %}{% endblock keywords %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/menu_pics/favicon-32x32.png' %}" />
+    <script src='{% static 'js/all.js' %}'></script>
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Bodoni+Moda+SC:wght@400;700&family=Anton&family=Kings&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css2/styler.css' %}">
+    <link rel="icon" href="{% static 'logo/logo.png' %}" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>{% block title %}Assanj{% endblock title %}</title>
+    
+</head>
+<body style="font-family: 'Playfair Display', serif; background-color: #F5F5DC; color: #333;">
+    <nav class="custom-navbar-{% block body-class %}{% endblock body-class %} navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+                <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="me-2"> 
+                <a href='/'>
+                        <div class="brand">
+                        Assanj
+                    </div>
+                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" onclick="closeNavbar()">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'post' %}" onclick="closeNavbar()">Posts</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' user.username %}" onclick="closeNavbar()">Profile</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm px-4 py-2 rounded-pill" href="{% url 'login' %}" onclick="closeNavbar()">Login</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% if is_owner %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'stall_owner_orders' user.id %}" onclick="closeNavbar()">Orders</a>
+                    </li>
+                    {% else %}
+                    {% block search %}
+                    
+                    {% endblock search %}
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% block navbar %}{% endblock %}
+
+<!-- Main Content -->
+<div class="container mt-3 pt-4">
+
+    {% block content %}
+    {% endblock content %}
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h5>About Us</h5>
+                <p>Discover unique products that showcase craftsmanship over brand labels. We bring you hand-crafted goods made with love and dedication.</p>
+            </div>
+
+            <div class="footer-section links">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    {% comment %} <li><a href="{% url 'subscription_page' %}">Future</a></li> {% endcomment %}
+                    <li><a href="{% url 'post' %}">Posts</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'profile' user.username %}">Profile</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="footer-section social">
+                <h5>Follow Us</h5>
+                <div class="social-icons">
+                    <a href="#"><i class="bx bxl-facebook"></i></a>
+                    <a href="#"><i class="bx bxl-twitter"></i></a>
+                    <a href="#"><i class="bx bxl-instagram"></i></a>
+                    <a href="#"><i class="bx bxl-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <a href="{% url 'terms_and_conditions' %}">Terms & Conditions</a>
+            <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+            <a href="{% url 'refund_cancellation_policy' %}">Refund Policy</a>
+        </div>
+
+        <div class="footer-copyright">
+            &copy; 2024 Assanj. All rights reserved.
+        </div>
+    </div>
+</footer>
+<link rel="stylesheet" href="{% static 'css2/styler.css' %}">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" ></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Cancel Friend Request function
+    function cancelFriendRequest(requestId) {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;  // CSRF token
+
+        // Send a POST request to cancel the friend request
+        fetch("{% url 'delete_friend_request' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({ request_id: requestId })  // Pass the request_id to cancel
+        })
+        .then(response => {
+            if (response.ok) {
+                // If the request was successful, remove the request from the DOM
+                document.getElementById(`request-${requestId}`).remove();
+            } else {
+                console.error("Failed to cancel the request.");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+</script>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
+{% comment %} 
+<script>
+    function processPayment(stallerId) {
+        const amount = parseFloat(document.getElementById('cart-total').innerText);
+    
+        if (isNaN(amount) || amount <= 0) {
+            alert("Invalid amount");
+            return;
+        }
+    
+        fetch(`/cart/process-payment/${stallerId}/`, {  
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // ✅ CSRF token for 
+            },
+            body: JSON.stringify({ 'amount': amount })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Payment successful! Your order number is ${data.order_number}.`);
+            } else {
+                alert('Payment failed! Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error while processing payment.');
+        });
+    }
+        
+</script> {% endcomment %}
+<script>
+    function handleFriendRequest(action, requestId) {
+        let url = "";
+        
+        if (action === "accept") {
+            url = "{% url 'accept_friend_request' %}";
+        } else if (action === "decline") {
+            url = "{% url 'delete_friend_request' %}";
+        }
+    
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()
+            },
+            body: JSON.stringify({ request_id: requestId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById(`request-${requestId}`).remove();
+            } else {
+                alert(data.error || "Something went wrong.");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+    
+    function removeFriend(friendId) {
+        fetch("{% url 'per_del_friend' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()
+            },
+            body: JSON.stringify({ friend_id: friendId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById(`friend-${friendId}`).remove();
+            } else {
+                alert(data.error || "Something went wrong.");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+    
+    // Function to retrieve CSRF token from cookies
+    function getCSRFToken() {
+        let cookieValue = null;
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith("csrftoken=")) {
+                cookieValue = cookie.substring("csrftoken=".length, cookie.length);
+                break;
+            }
+        }
+        return cookieValue;
+    }
+    
+</script>
+{% comment %} <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sliders = {
+            'popular': { index: 0, container: document.getElementById('popularSlider') },
+            'all': { index: 0, container: document.getElementById('allSlider') }
+        };
+    
+        function updateSlidePosition(sliderKey) {
+            const slider = sliders[sliderKey].container;
+            const slideWidth = slider.querySelector('.slide').clientWidth;
+            slider.style.transform = `translateX(-${slideWidth * sliders[sliderKey].index}px)`;
+        }
+    
+        window.nextSlide = function (sliderKey) {
+            const slider = sliders[sliderKey].container;
+            const totalSlides = slider.querySelectorAll('.slide').length;
+    
+            sliders[sliderKey].index = (sliders[sliderKey].index + 1) % totalSlides;
+            updateSlidePosition(sliderKey);
+        }
+    
+        window.prevSlide = function (sliderKey) {
+            const slider = sliders[sliderKey].container;
+            const totalSlides = slider.querySelectorAll('.slide').length;
+    
+            sliders[sliderKey].index = (sliders[sliderKey].index - 1 + totalSlides) % totalSlides;
+            updateSlidePosition(sliderKey);
+        }
+    
+        window.addEventListener("resize", function () {
+            updateSlidePosition('popular');
+            updateSlidePosition('all');
+        });
+    });
+    </script> {% endcomment %}
+<script>
+    {% comment %} function toggleCart(itemId) {
+        fetch(`/add-to-cart/${itemId}/`, {  // Use correct URL from urls.py
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",  // Ensure CSRF protection
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let btn = document.getElementById(`cart-btn-${itemId}`);
+                if (data.in_cart) {
+                    btn.textContent = "Remove from Cart";
+                    btn.classList.remove("btn-success");
+                    btn.classList.add("btn-danger");
+                } else {
+                    btn.textContent = "Add to Cart";
+                    btn.classList.remove("btn-danger");
+                    btn.classList.add("btn-success");
+                }
+            }
+        });
+    } {% endcomment %}
+    </script>
+    
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    var ctx = document.getElementById('friendshipChart').getContext('2d');
+    var friendshipChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Friend Requests Sent', 'Friend Requests Received', 'Friends'],
+            datasets: [{
+                data: [{{ friend_requests_sent }}, {{ friend_requests_received }}, {{ friends }}],
+                backgroundColor: ['#FF6384', '#36A2EB', '#4CAF50']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+{% block script %}
+{% endblock script %}
+</body>
+</html>

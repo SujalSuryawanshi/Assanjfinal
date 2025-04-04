@@ -1,0 +1,304 @@
+body {
+  font-family: 'Playfair Display', serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+h1.desc-heading, h5.card-title {
+  font-family: 'Kings', serif;
+  font-size: 2rem;
+  color: #444;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+h6.home-card-text {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 0.95rem;
+  color: #555;
+  margin: 5px 0;
+}
+
+.description p small {
+  font-family: 'Anton', sans-serif;
+  color: #666;
+  line-height: 1.5;
+}
+
+.card {
+  background: #ffffff;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background-color: #8e44ad;
+  border: none;
+  font-family: 'Anton', sans-serif;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #732d91;
+}
+
+.slider {
+  position: relative;
+  overflow: hidden;
+  margin: 30px auto;
+  max-width: 1200px;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  min-width: 300px;
+  margin: 0 10px;
+  flex: 1 0 auto;
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 1.5rem;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+form .form-control {
+  font-family: 'Fjalla One', sans-serif;
+  border-radius: 10px;
+  padding: 10px;
+  border: 2px solid #ddd;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+form .form-control:focus {
+  border-color: #8e44ad;
+  box-shadow: 0px 0px 5px rgba(142, 68, 173, 0.5);
+  outline: none;
+}
+
+h6.home-card-text span {
+  font-weight: bold;
+  color: #8e44ad;
+}
+
+footer {
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+  font-family: 'Fjalla One', sans-serif;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer a:hover {
+  color: #8e44ad;
+}
+
+.btn-back {
+  background-color: #8e44ad;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Anton', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #732d91;
+}
+
+.btnry {
+  background-color: #8e44ad; /* Purple background */
+  color: white;
+  border: none;
+  padding: 15px 30px; /* More padding for a larger button */
+  font-size: 16px;
+  font-family: 'Anton', sans-serif;
+  border-radius: 50px; /* Rounded corners for a modern look */
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnry:hover {
+  background-color: #732d91; /* Darker purple on hover */
+  transform: translateY(-5px); /* Slight lift effect */
+}
+
+.btnry .ribbons {
+  background-color: #f39c12; /* Bright yellow for the ribbon */
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 10px;
+  position: absolute;
+  top: 10px;
+  left: -10px;
+  transform: rotate(-45deg); /* Diagonal ribbon effect */
+  white-space: nowrap;
+}
+
+.btnry .ribbons:hover {
+  background-color: #e67e22; /* Slight change on hover */
+}
+.dropdown-toggle {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.dropdown-toggle:hover {
+  background: linear-gradient(135deg, #2575fc, #6a11cb);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+.dropdown-menu {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.dropdown-item {
+  padding: 10px 20px;
+  font-size: 15px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+.dropdown-item:hover {
+  background-color: #2575fc;
+  color: white;
+}
+
+
+.profile-card {
+  max-width: 400px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Header Section */
+.profile-header {
+  background: linear-gradient(135deg, #4caf50, #81c784);
+  color: #ffffff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.profile-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Profile Information */
+.profile-body {
+  padding: 20px;
+}
+
+.profile-info h4 {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 5px;
+}
+
+.profile-info p {
+  font-size: 14px;
+  color: #555555;
+  margin: 0 0 15px;
+  line-height: 1.6;
+}
+
+/* Actions Section */
+.profile-actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-actions .btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  margin: 5px;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.profile-actions .btn-primary {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+}
+
+.profile-actions .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.profile-actions .btn-danger {
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+}
+
+.profile-actions .btn-danger:hover {
+  background-color: #a71d2a;
+}

@@ -1,0 +1,69 @@
+{% extends "base.html" %} 
+{% block body-class %}
+home
+{% endblock body-class %}
+{% block navbar %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Discover the best food & art on streets!</h1>
+        <div class="search-container">
+            <form role="search" method=GET action="{% url 'search' %}">
+                {% csrf_token %}
+                <input type="text" id="search-form" placeholder="Search for dishes, products or anything!" value="" name="query">
+                {% comment %} <button type="submit" class="search-submit"></button> {% endcomment %}
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock navbar %}
+
+
+
+
+{% block content %} 
+{% load socialaccount %}
+{% load star_rating %}
+{% load embed_video_tags %}
+{% load has_group %}
+
+{% for category in cat %}
+<div class="slider-container">
+    <h3 class="category-title">{{ category.cat_name }}</h3>
+    <div class="slider-wrapper">
+        <div class="slider" id="{{ category.cat_name|slugify }}Slider">
+            {% for stall_data in stalls_with_follow_count %}
+            {% if category in stall_data.stall.category.all %}
+            <div class="slide">
+                <div class="card shadow-lg">
+                    <div class="video-container">
+                        {% video stall_data.stall.video '100% x 80%' %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ stall_data.stall.name }}</h5>
+                        <p class="card-text"><strong>📍</strong> {{ stall_data.stall.address }}</p>
+                        <p class="card-text"><strong>🕒</strong> {{ stall_data.stall.timings }}</p>
+                        <p class="text-muted">
+                            {% if stalls.stall.egit|lower == "veg" %}
+                                🟢 {{ stalls.stall.egit }}
+                            {% elif stalls.stall.egit|lower == "non-veg" %}
+                                🔴 {{ stalls.stall.egit }}
+                            {% elif stalls.stall.egit|lower == "both" %}
+                                🟢🔴 {{ stalls.stall.egit }}
+                            {% else %}
+                                {{ stalls.stall.egit }}
+                            {% endif %}
+                        </p>     
+                        <p class="card-text"><strong></strong> ⭐ {{ stall_data.stall.rating|star_rating }} ({{ stall_data.stall.rating }})</p>
+                        <p class="card-text"><strong></strong> 👥{{ stall_data.follow_count }}</p>
+                        <a href="{% url 'detail' stall_data.stall.name %}" class="btn btn-primary w-100">Step in!</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock content %}

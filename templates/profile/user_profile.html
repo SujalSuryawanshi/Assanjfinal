@@ -1,0 +1,47 @@
+{% extends "base.html" %} 
+{% block title %}
+Profile page
+{% endblock title %}
+{% block search %}
+<div class="search-container">
+    <form role="search" method=GET action="{% url 'search' %}">
+        {% csrf_token %}
+        <input class="search-box" type="text" id="search-form" placeholder="Search for anything!" value="" name="query">
+        {% comment %} <button type="submit" class="search-submit"></button> {% endcomment %}
+    </form>
+</div>
+{% endblock search %}
+{% block content %} 
+{% load socialaccount %}
+{% load star_rating %}
+{% load embed_video_tags %}
+{% load has_group %}
+<br><br><br>
+<h3 class='Menu-title'>Your Friend: {{ usered.username }}'s Preferences</h3>
+
+<button onclick="goBack()" class="btn btn-primary">Go Back</button>
+<div class="slider-container">
+  <button class="prev" onclick="prevSlide('popular')">&#10094;</button>
+  <div class="slider" id="popularSlider">
+      {% for i in followed_stallers %}
+      <div class="slide">
+          <div class="card shadow-lg">
+              {% video i.video '100% x 80%' %}
+              <div class="card-body">
+                  <h5 class="card-title text-primary">{{ i.name }}</h5>
+                  <p class="card-text"><strong>Address:</strong> {{ i.address }}</p>
+                  <p class="card-text"><strong>Timings:</strong> {{ i.timings }}</p>
+                  <p class="card-text"><strong>Specialty:</strong> {{ i.egit }}</p>
+                  <p class="card-text"><strong>Rating:</strong> {{ i.rating|star_rating }} ({{ i.rating }})</p>
+                  <p class="card-text"><strong>Followers:</strong> {{ i.follow_count }}</p>
+                  <a href="{% url 'detail' i.name %}" class="btn btn-outline-primary look-button">View Details</a>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+  <button class="next" onclick="nextSlide('popular')">&#10095;</button>
+</div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% block search %}
+<div class="search-container">
+    <form role="search" method=GET action="{% url 'search' %}">
+        {% csrf_token %}
+        <input class="search-box" type="text" id="search-form" placeholder="Search for anything!" value="" name="query">
+        {% comment %} <button type="submit" class="search-submit"></button> {% endcomment %}
+    </form>
+</div>
+{% endblock search %}
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<div class='premium-title'>
+    <h7 class="menu-text">{{ offer.message }}</h7>
+    <button onclick="goBack()" class="btn btn-success">Go Back</button>
+</div>
+<br>
+{% for offer in offers %}
+<div class="offer-container">
+    <div class="offer-image">
+        <img src="{{ offer.offer_photo.url }}" alt="{{ offer.title }}">
+    </div>
+    <div class="offer-details">
+        <h5 class="offer-title">{{ offer.title }}</h5>
+        <p class="offer-text">{{ offer.message }}</p>
+        {% if request.user == offer.owner.owner %}
+        <div class="offer-actions">
+            <a href="{% url 'edit_offer' offer.id %}" class="offer-edit-btn">Edit</a>
+            <form method="post" action="{% url 'delete_offer' offer.id %}" class="offer-delete-form">
+                {% csrf_token %}
+                <button type="submit" class="offer-delete-btn">Delete</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<br>
+<br>
+{% endfor %}
+{% endblock content %}

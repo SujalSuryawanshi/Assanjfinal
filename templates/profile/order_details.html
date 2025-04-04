@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<h2>Order Details - #{{ order.order_number }}</h2>
+
+<p><strong>Stall Owner: </strong><a href="{% url 'detail' order.stall_owner %}" data-name="{{order.stall_owner.name}}">{{ order.stall_owner }}</a></p>
+<p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+<p><strong>Status:</strong> {{ order.get_status_display }}</p>
+<p><strong>Order Created At:</strong> {{ order.created_at }}</p>
+
+<h3>Items in Order:</h3>
+{% if cart_items %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody id="cart-items">
+        {% for cart_item in cart_items %}
+            <tr id="cart-item-{{ cart_item.id }}">
+                <td>{{ cart_item.menu_item.name }}</td>
+                <td>{{ cart_item.menu_item.normal_price }}</td>
+                <td>
+                    {{ cart_item.quantity }}
+                </td>
+                <td id="total-{{ cart_item.id }}">{{ cart_item.total_price }}</td>
+                
+            </tr>
+        {% endfor %}
+        <tr>
+        {% if total_price_true %}
+
+        <td colspan="3"><strong>Total</strong></td>
+        <td colspan="2"><strong id="cart-total">{{ total_price }}</strong></td>
+        {% else %}
+        {% endif %}
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p>No items found for this order.</p>
+{% endif %}
+
+<a href="{% url 'my_orders' request.user.username %}">Back to My Orders</a>
+
+{% endblock %}
+    

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block body-class %}
+all
+{% endblock body-class %}
+{% load socialaccount %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<br>
+<br>
+<br>
+<br>
+    <div class="container-sm">
+      <div class='container'>
+        <h1 class='Menu-title'>Log In</h1>
+        <br>
+        <form method="post" class='Menu-title'>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <p>Don't have an account yet?    
+            <a href={% url 'register'%}>Register<br><br>
+          </p>
+          <button type="submit" class="btn btn-primary">Log In</button>
+          <p>  
+            <a href={% url 'password_reset'%}>Forgot password?<br><br>
+          </p>
+          <br>
+        </form>
+        <p><a href="{% url 'google_direct_login' %}" class="btn btn-primary">
+          Sign In With Google
+      </a>
+      
+        </p>
+      </div>
+        <br>
+    </div>
+{% endblock content %}
