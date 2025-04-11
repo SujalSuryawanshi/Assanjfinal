@@ -15,7 +15,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "192.168.31.33", 
-    "https://assanjfinal.onrender.com",
+    "assanjfinal.onrender.com",
     "127.0.0.1",
     "localhost",
 ]
