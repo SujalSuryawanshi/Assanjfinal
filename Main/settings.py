@@ -112,16 +112,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Main.wsgi.application'
 
+import dj_database_url
+import os
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'new1234',
-        'USER': 'Thomas',
-        'PASSWORD': 'sujal12',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://new1234_user:Pj2dVMG9rzi26P8aPhilmoVjv43qVT34@dpg-cvsjonre5dus7396b100-a.oregon-postgres.render.com/new1234',
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
