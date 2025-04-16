@@ -15,7 +15,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "192.168.31.33", 
+<<<<<<< HEAD
     "assanjfinal.onrender.com",
+=======
+    "10.1.233.192",
+>>>>>>> c7e1953 (firsts commit)
     "127.0.0.1",
     "localhost",
 ]
@@ -112,6 +116,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Main.wsgi.application'
 
+<<<<<<< HEAD
 import dj_database_url
 import os
 
@@ -124,6 +129,19 @@ DATABASES = {
 }
 
 
+=======
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'new1234',
+        'USER': 'Thomas',
+        'PASSWORD': 'sujal12',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+>>>>>>> c7e1953 (firsts commit)
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -197,4 +215,8 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 ##PAYMENTS##
 RAZORPAY_KEY_ID = "rzp_test_AkSfYqzbTkz3rH"
+<<<<<<< HEAD
 RAZORPAY_KEY_SECRET = "Xm5OK0qqXnFz6BgX2CLkOEpE"
+=======
+RAZORPAY_KEY_SECRET = "Xm5OK0qqXnFz6BgX2CLkOEpE"
+>>>>>>> c7e1953 (firsts commit)
